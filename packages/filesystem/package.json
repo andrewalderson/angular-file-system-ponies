@@ -2,8 +2,9 @@
   "name": "@ponies/filesystem",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^20.0.0",
-    "@angular/core": "^20.0.0"
+    "vite": "^6.0.0",
+    "@analogjs/vite-plugin-angular": "~1.17.1",
+    "@nx/vite": "21.2.1"
   },
   "sideEffects": false
 }

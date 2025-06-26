@@ -23,7 +23,14 @@
 				"dbaeumer.vscode-eslint",
 				"Angular.ng-template",
 				"vitest.explorer"
-			]
+			],
+			"settings": {
+				"editor.formatOnSave": true,
+				"editor.codeActionsOnSave": {
+					"source.fixAll.eslint": "always",
+					"source.organizeImports": "always"
+				}
+			}
 		}
 	}
 
