@@ -1,0 +1,36 @@
+{
+  "name": "filesystem",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "/packages/filesystem/src",
+  "prefix": "lib",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "/packages/filesystem/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "/packages/filesystem/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "/packages/filesystem/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "reportsDirectory": "../../coverage/packages/filesystem"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

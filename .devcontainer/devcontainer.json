@@ -18,7 +18,11 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"nrwl.angular-console"
+				"nrwl.angular-console",
+				"esbenp.prettier-vscode",
+				"dbaeumer.vscode-eslint",
+				"Angular.ng-template",
+				"vitest.explorer"
 			]
 		}
 	}
