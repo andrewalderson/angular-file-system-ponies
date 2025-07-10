@@ -26,3 +26,9 @@ export type FilePickerOptions = {
 export type OpenFilePickerOptions = FilePickerOptions & {
   multiple?: boolean;
 };
+
+export type DirectoryPickerOptions = {
+  id: string;
+  startIn: StartInDirectory;
+  mode: FileSystemPermissionMode;
+};

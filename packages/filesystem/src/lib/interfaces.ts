@@ -11,3 +11,11 @@ export interface FileSystemFileHandleAdapter<W = FileSystemWriteChunkType> exten
   createWritable(options: FileSystemCreateWritableOptions): Promise<UnderlyingSink<W>>;
   getFile(): Promise<File>;
 }
+
+export interface FileSystemDirectoryHandleAdapter extends FileSystemHandleAdapter {
+  readonly kind: Extract<FileSystemHandleKind, 'directory'>;
+
+  entries(): AsyncGenerator<[string, FileSystemFileHandleAdapter | FileSystemDirectoryHandleAdapter], void, undefined>;
+  getFileHandle(name: string, options?: FileSystemGetFileOptions): Promise<FileSystemFileHandleAdapter>;
+  getDirectoryHandle(name: string, options?: FileSystemGetDirectoryOptions): Promise<FileSystemDirectoryHandleAdapter>;
+}
