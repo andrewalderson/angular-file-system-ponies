@@ -1,6 +1,5 @@
 import { Component, output } from '@angular/core';
 import { render } from '@testing-library/angular';
-import { FileSystemFileHandle } from '../file-system-file-handle';
 import { SaveFilePicker } from './save-file-picker';
 
 let showSaveFilePickerMock;

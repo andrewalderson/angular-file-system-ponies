@@ -1,6 +1,5 @@
 import { Component, output } from '@angular/core';
 import { fireEvent, render } from '@testing-library/angular';
-import { FileSystemFileHandle } from '../file-system-file-handle';
 import { Dropzone } from './dropzone';
 
 describe('Dropzone', () => {

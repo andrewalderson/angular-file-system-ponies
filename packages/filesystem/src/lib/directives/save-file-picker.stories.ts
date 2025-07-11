@@ -1,6 +1,5 @@
 import { Component, ElementRef, viewChild } from '@angular/core';
 import { Meta, StoryObj } from '@storybook/angular';
-import { FileSystemFileHandle } from '../file-system-file-handle';
 import { SaveFilePickerOptions } from '../types';
 import { SaveFilePicker } from './save-file-picker';
 

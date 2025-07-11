@@ -1,6 +1,6 @@
 import { Component, ElementRef, inject, Renderer2 } from '@angular/core';
 import { Meta, StoryObj } from '@storybook/angular';
-import { FileSystemDirectoryHandle } from '../file-system-directory-handle';
+import type { FileSystemDirectoryHandle } from '../file-system-directory-handle';
 import { DirectoryPicker } from './directory-picker';
 
 @Component({

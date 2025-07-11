@@ -1,5 +1,5 @@
 import { Directive, inject, Injector, input, output, runInInjectionContext } from '@angular/core';
-import { FileSystemDirectoryHandle } from '../file-system-directory-handle';
+import type { FileSystemDirectoryHandle } from '../file-system-directory-handle';
 import { showDirectoryPicker } from '../show-directory-picker'; // TODO: remove when no longer need to ponyfill 'globalThis.showDirectoryPicker'
 import type { DirectoryPickerOptions } from '../types';
 

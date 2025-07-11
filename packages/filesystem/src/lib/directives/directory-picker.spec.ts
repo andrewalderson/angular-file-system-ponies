@@ -1,6 +1,6 @@
 import { Component, output } from '@angular/core';
 import { render } from '@testing-library/angular';
-import { FileSystemDirectoryHandle } from '../file-system-directory-handle';
+import type { FileSystemDirectoryHandle } from '../file-system-directory-handle';
 import { DirectoryPicker } from './directory-picker';
 
 let showDirectoryPickerMock;

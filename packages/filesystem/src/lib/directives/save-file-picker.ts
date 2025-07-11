@@ -1,5 +1,4 @@
 import { Directive, inject, Injector, input, output, runInInjectionContext } from '@angular/core';
-import { FileSystemFileHandle } from '../file-system-file-handle';
 import { showSaveFilePicker } from '../show-save-file-picker'; // TODO: remove when no longer need to ponyfill 'globalThis.showSaveFilePicker'
 import type { SaveFilePickerOptions } from '../types';
 
