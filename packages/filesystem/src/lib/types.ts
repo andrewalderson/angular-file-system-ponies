@@ -27,6 +27,10 @@ export type OpenFilePickerOptions = FilePickerOptions & {
   multiple?: boolean;
 };
 
+export type SaveFilePickerOptions = FilePickerOptions & {
+  suggestedName?: string;
+};
+
 export type DirectoryPickerOptions = {
   id: string;
   startIn: StartInDirectory;

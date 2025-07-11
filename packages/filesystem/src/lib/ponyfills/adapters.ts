@@ -1,5 +1,56 @@
 import { FileSystemDirectoryHandleAdapter, FileSystemFileHandleAdapter } from '../interfaces';
 
+class DownloadSink implements UnderlyingSink<FileSystemWriteChunkType> {
+  private chunks: BlobPart[] = [];
+
+  constructor(private name = 'download') {}
+
+  async write(chunk: FileSystemWriteChunkType) {
+    const part: BlobPart = (
+      typeof chunk === 'object' && chunk !== null && 'data' in chunk ? chunk.data : chunk
+    ) as BlobPart;
+    if (part) {
+      this.chunks.push(part);
+    }
+  }
+
+  async close() {
+    const link = document.createElement('a');
+    link.download = this.name;
+    const blob = new Blob(this.chunks, { type: 'application/octet-stream; charset=utf-8' });
+    this.chunks = [];
+    link.href = URL.createObjectURL(blob);
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(link.href), 10000);
+  }
+}
+
+/**
+ * Used by 'showSaveFilePicker' to download the file
+ */
+export class WritableFileAdapter implements FileSystemFileHandleAdapter {
+  readonly kind = 'file';
+  readonly name: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  async createWritable(options: FileSystemCreateWritableOptions): Promise<UnderlyingSink<FileSystemWriteChunkType>> {
+    return new DownloadSink(this.name);
+  }
+
+  getFile(): Promise<File> {
+    // There is no file to get
+    throw new DOMException('The requested method is not supported.', 'NotSupportedError');
+  }
+
+  async isSameEntry(other: this): Promise<boolean> {
+    // Since there is no backing file there is nothing to compare
+    throw new DOMException('The requested method is not supported.', 'NotSupportedError');
+  }
+}
+
 /**
  * Used by the 'showOpenFilePicker' and 'showDirectoryPicker' ponyfills
  */
