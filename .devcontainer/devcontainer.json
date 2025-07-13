@@ -6,7 +6,11 @@
   "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
 
   // Features to add to the dev container. More info: https://containers.dev/features.
-  // "features": {},
+  "features": {
+    // Needed for Github Local Actions extension
+    "ghcr.io/devcontainers-extra/features/act:1": { },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": { }
+  },
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
@@ -26,7 +30,9 @@
         "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
         "Angular.ng-template",
-        "vitest.explorer"
+        "vitest.explorer",
+        "SanjulaGanepola.github-local-actions",
+        "GitHub.vscode-github-actions"
       ],
       "settings": {
         "editor.defaultFormatter": "esbenp.prettier-vscode",

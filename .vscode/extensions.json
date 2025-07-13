@@ -4,6 +4,8 @@
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "angular.ng-template",
-    "vitest.explorer"
+    "vitest.explorer",
+    "sanjulaganepola.github-local-actions",
+    "github.vscode-github-actions"
   ]
 }
