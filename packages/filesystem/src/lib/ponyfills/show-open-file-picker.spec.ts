@@ -1,34 +1,15 @@
-import { Renderer2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import { OpenFilePickerOptions } from '../types';
 import { showOpenFilePicker } from './show-open-file-picker';
 
-class MockRenderer {
-  createElement(type: string) {
-    return document.createElement(type);
-  }
-
-  appendChild(parent: Element, newChild: Element) {
-    parent.appendChild(newChild);
-  }
-
-  listen(element: EventTarget, event: string, callback: (event: Event) => boolean | void) {
-    element.addEventListener(event, callback);
-
-    return () => element.removeEventListener(event, callback);
-  }
-}
-
 describe('showOpenFilePicker', () => {
   beforeAll(() => {
     // Not implemented in non-browser (jsdom) test environment
     HTMLInputElement.prototype.showPicker = vi.fn();
   });
-  beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [{ provide: Renderer2, useClass: MockRenderer }] });
-  });
+
   it('should return the selected files', async () => {
     const user = userEvent.setup();
     const expectedFiles = [new File([], 'test')];

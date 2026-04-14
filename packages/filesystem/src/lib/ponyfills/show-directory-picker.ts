@@ -1,13 +1,8 @@
-import { DOCUMENT, inject, Renderer2 } from '@angular/core';
 import { FileSystemDirectoryHandle } from '../file-system-directory-handle';
 import { DirectoryPickerOptions } from '../types';
 import { ReadonlyDirectoryAdapter, ReadonlyFileAdapter } from './adapters';
 
 export async function showDirectoryPicker(options?: DirectoryPickerOptions): Promise<FileSystemDirectoryHandle> {
-  // IMPORTANT: this code needs to be run in an injection context using 'runInInjectionContext' or it will fail silently
-  const renderer = inject(Renderer2);
-  const document = inject(DOCUMENT);
-
   // TODO: use Promise.withResolvers when all browsers the Angular version supports implement it
   let resolve: (value: FileSystemDirectoryHandle | PromiseLike<FileSystemDirectoryHandle>) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,7 +12,7 @@ export async function showDirectoryPicker(options?: DirectoryPickerOptions): Pro
     reject = rej;
   });
 
-  const input: HTMLInputElement = renderer.createElement('input');
+  const input: HTMLInputElement = document.createElement('input');
   input.type = 'file';
   input.webkitdirectory = true;
   input.ariaHidden = 'true'; // Hide from screen readers
@@ -25,10 +20,12 @@ export async function showDirectoryPicker(options?: DirectoryPickerOptions): Pro
   input.style.display = 'none';
 
   // See https://stackoverflow.com/questions/47664777/javascript-file-input-onchange-not-working-ios-safari-only
-  renderer.appendChild(document.body, input);
+  document.body.appendChild(input);
 
-  const unlistenFns = [
-    renderer.listen(input, 'change', () => {
+  const abortController = new AbortController();
+  input.addEventListener(
+    'change',
+    () => {
       if (input.files) {
         const files = Array.from(input.files);
         const rootPath = files[0].webkitRelativePath.split('/', 1)[0];
@@ -49,21 +46,27 @@ export async function showDirectoryPicker(options?: DirectoryPickerOptions): Pro
 
         resolve(new FileSystemDirectoryHandle(root));
       }
-    }),
-    renderer.listen(input, 'cancel', () => {
+    },
+    { signal: abortController.signal }
+  );
+
+  input.addEventListener(
+    'cancel',
+    () => {
       reject(
         new DOMException(
           "Failed to execute 'showDirectoryPicker' on 'Window': The user aborted a request.",
           'AbortError'
         )
       );
-    }),
-  ];
+    },
+    { signal: abortController.signal }
+  );
 
   input.showPicker();
 
   return promise.finally(() => {
-    unlistenFns.forEach((unlisten) => unlisten());
+    abortController.abort();
     input.remove();
   });
 }

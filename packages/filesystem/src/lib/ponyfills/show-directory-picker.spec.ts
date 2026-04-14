@@ -1,4 +1,3 @@
-import { Renderer2 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { fireEvent } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
@@ -6,22 +5,6 @@ import { FileSystemDirectoryHandle } from '../file-system-directory-handle';
 import { FileSystemFileHandle } from '../file-system-file-handle';
 import { ReadonlyDirectoryAdapter, ReadonlyFileAdapter } from './adapters';
 import { showDirectoryPicker } from './show-directory-picker';
-
-class MockRenderer {
-  createElement(type: string) {
-    return document.createElement(type);
-  }
-
-  appendChild(parent: Element, newChild: Element) {
-    parent.appendChild(newChild);
-  }
-
-  listen(element: EventTarget, event: string, callback: (event: Event) => boolean | void) {
-    element.addEventListener(event, callback);
-
-    return () => element.removeEventListener(event, callback);
-  }
-}
 
 const files: File[] = [
   { name: 'one.txt', webkitRelativePath: 'root/one.txt' },
@@ -49,9 +32,6 @@ describe('showDirectoryPicker', () => {
   beforeAll(() => {
     // Not implemented in non-browser (jsdom) test environment
     HTMLInputElement.prototype.showPicker = vi.fn();
-  });
-  beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [{ provide: Renderer2, useClass: MockRenderer }] });
   });
 
   it('should create a properly configured input', async () => {

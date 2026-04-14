@@ -1,6 +1,6 @@
-import { Directive, inject, Injector, input, output, runInInjectionContext } from '@angular/core';
+import { Directive, input, output } from '@angular/core';
 import { showOpenFilePicker } from '../show-open-file-picker'; // TODO: remove when no longer need to ponyfill 'globalThis.showOpenFilePicker'
-import type { OpenFilePickerOptions } from '../types';
+import type { OpenFilePickerOptions } from '../types'; // TODO: remove when no longer need to ponyfill 'globalThis.showOpenFilePicker'
 
 @Directive({
   selector: '[libOpenFilePicker]',
@@ -10,8 +10,6 @@ import type { OpenFilePickerOptions } from '../types';
   },
 })
 export class OpenFilePicker {
-  private readonly _injector = inject(Injector);
-
   readonly options = input<OpenFilePickerOptions>(undefined, { alias: 'libOpenFilePickerOptions' });
 
   readonly files = output<FileSystemFileHandle[]>({ alias: 'libOpenFilePickerFiles' });
@@ -19,13 +17,14 @@ export class OpenFilePicker {
   protected async pickFiles(event: Event) {
     event.preventDefault();
 
-    // TODO: remove the 'runInInjectionContext' wrapper when we remove the ponyfill import
-    const fileHandles = await runInInjectionContext<Promise<FileSystemFileHandle[]>>(this._injector, () =>
-      showOpenFilePicker(this.options())
-    ).catch(console.error); // TODO: what do we do with errors?
+    try {
+      const fileHandles = await showOpenFilePicker(this.options());
 
-    if (fileHandles) {
-      this.files.emit(fileHandles);
+      if (fileHandles) {
+        this.files.emit(fileHandles);
+      }
+    } catch {
+      // TODO: what do we do with errors?
     }
   }
 }

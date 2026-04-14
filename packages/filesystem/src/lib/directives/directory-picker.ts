@@ -1,7 +1,7 @@
-import { Directive, inject, Injector, input, output, runInInjectionContext } from '@angular/core';
-import type { FileSystemDirectoryHandle } from '../file-system-directory-handle';
+import { Directive, input, output } from '@angular/core';
+import type { FileSystemDirectoryHandle } from '../file-system-directory-handle'; // TODO: remove when no longer need to ponyfill 'globalThis.showDirectoryPicker'
 import { showDirectoryPicker } from '../show-directory-picker'; // TODO: remove when no longer need to ponyfill 'globalThis.showDirectoryPicker'
-import type { DirectoryPickerOptions } from '../types';
+import type { DirectoryPickerOptions } from '../types'; // TODO: remove when no longer need to ponyfill 'globalThis.showDirectoryPicker'
 
 @Directive({
   selector: '[libDirectoryPicker]',
@@ -11,8 +11,6 @@ import type { DirectoryPickerOptions } from '../types';
   },
 })
 export class DirectoryPicker {
-  private readonly _injector = inject(Injector);
-
   readonly options = input<DirectoryPickerOptions>(undefined, { alias: 'libDirectoryPickerOptions' });
 
   readonly directory = output<FileSystemDirectoryHandle>({ alias: 'libDirectoryPickerDirectory' });
@@ -20,13 +18,14 @@ export class DirectoryPicker {
   protected async pickDirectory(event: Event) {
     event.preventDefault();
 
-    // TODO remove the 'runInInjectionContext' wrapper when we remove the ponyfill import
-    const handle = await runInInjectionContext<Promise<FileSystemDirectoryHandle>>(this._injector, () =>
-      showDirectoryPicker(this.options())
-    ).catch(console.error); // TODO: what do we do with errors?
+    try {
+      const handle = await showDirectoryPicker(this.options());
 
-    if (handle) {
-      this.directory.emit(handle);
+      if (handle) {
+        this.directory.emit(handle);
+      }
+    } catch {
+      // TODO: what do we do with errors?
     }
   }
 }

@@ -1,13 +1,8 @@
-import { DOCUMENT, inject, Renderer2 } from '@angular/core';
 import { FileSystemFileHandle } from '../file-system-file-handle';
 import type { FilePickerAcceptType, OpenFilePickerOptions } from '../types';
 import { ReadonlyFileAdapter } from './adapters';
 
 export async function showOpenFilePicker(options?: OpenFilePickerOptions): Promise<FileSystemFileHandle[]> {
-  // IMPORTANT: this code needs to be run in an injection context
-  const renderer = inject(Renderer2);
-  const document = inject(DOCUMENT);
-
   let resolve: (value: FileSystemFileHandle[] | PromiseLike<FileSystemFileHandle[]>) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let reject: (reason?: any) => void;
@@ -17,7 +12,7 @@ export async function showOpenFilePicker(options?: OpenFilePickerOptions): Promi
     reject = rej;
   });
 
-  const input: HTMLInputElement = renderer.createElement('input');
+  const input: HTMLInputElement = document.createElement('input');
   input.type = 'file';
   input.multiple = !!options?.multiple;
 
@@ -42,17 +37,24 @@ export async function showOpenFilePicker(options?: OpenFilePickerOptions): Promi
     top: '-100000px',
     left: '-100000px',
   });
-  renderer.appendChild(document.body, input);
+  document.body.appendChild(input);
 
-  const unlistenFns = [
-    renderer.listen(input, 'change', () => {
+  const abortController = new AbortController();
+  input.addEventListener(
+    'change',
+    () => {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const fileHandles = Array.from(input.files!).map(
         (file) => new FileSystemFileHandle(new ReadonlyFileAdapter(file))
       );
       resolve(fileHandles);
-    }),
-    renderer.listen(input, 'cancel', () => {
+    },
+    { signal: abortController.signal }
+  );
+
+  input.addEventListener(
+    'cancel',
+    () => {
       // This exception matches globalThis.showOpenFilePicker implementation.
       // The message is the one shown in Edge
       // There is no standard for it so it may be different in different browsers/OS
@@ -62,13 +64,14 @@ export async function showOpenFilePicker(options?: OpenFilePickerOptions): Promi
           'AbortError'
         )
       );
-    }),
-  ];
+    },
+    { signal: abortController.signal }
+  );
 
   input.showPicker();
 
   return promise.finally(() => {
-    unlistenFns.forEach((unlisten) => unlisten());
+    abortController.abort();
     input.remove();
   });
 }
