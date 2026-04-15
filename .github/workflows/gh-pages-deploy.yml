@@ -42,7 +42,7 @@ jobs:
 
       - name: Install and Build 🔧
         run: |
-          npm ci
+          HUSKY=0 npm ci
           npx nx run filesystem:build-storybook --configuration=ci
 
       - name: Upload artifact
