@@ -1,10 +1,10 @@
-// prettier-ignore
-// @ts-expect-error Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
-globalThis.showDirectoryPicker = globalThis.showDirectoryPicker ?? (await import('./ponyfills/show-directory-picker')).showDirectoryPicker;
+// // prettier-ignore
+// // @ts-expect-error Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
+// globalThis.showDirectoryPicker = globalThis.showDirectoryPicker ?? (await import('./ponyfills/show-directory-picker')).showDirectoryPicker;
 
-// If you get a build error from the top-level await above use this async function instead
-// (async () => {
-//   // prettier-ignore
-//   // @ts-expect-error Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
-//   globalThis.showDirectoryPicker = globalThis.showDirectoryPicker ?? (await import('./ponyfills/show-directory-picker')).showDirectoryPicker;
-// })();
+// Getting a build error for the top-level await but only occasionally so going old school
+(async () => {
+  // prettier-ignore
+  // @ts-expect-error Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
+  globalThis.showDirectoryPicker = globalThis.showDirectoryPicker ?? (await import('./ponyfills/show-directory-picker')).showDirectoryPicker;
+})();
