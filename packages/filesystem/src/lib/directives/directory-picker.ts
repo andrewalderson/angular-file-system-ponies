@@ -1,6 +1,6 @@
 import { Directive, input, output } from '@angular/core';
 import type { FileSystemDirectoryHandle } from '../file-system-directory-handle'; // TODO: remove when no longer need to ponyfill 'globalThis.showDirectoryPicker'
-import { showDirectoryPicker } from '../show-directory-picker'; // TODO: remove when no longer need to ponyfill 'globalThis.showDirectoryPicker'
+import '../show-directory-picker'; // TODO: remove when no longer need to ponyfill 'globalThis.showDirectoryPicker'
 import type { DirectoryPickerOptions } from '../types'; // TODO: remove when no longer need to ponyfill 'globalThis.showDirectoryPicker'
 
 @Directive({
@@ -19,6 +19,7 @@ export class DirectoryPicker {
     event.preventDefault();
 
     try {
+      // @ts-expect-error remove when no longer need to ponyfill 'globalThis.showDirectoryPicker'
       const handle = await showDirectoryPicker(this.options());
 
       if (handle) {

@@ -1,5 +1,5 @@
 import { Directive, input, output } from '@angular/core';
-import { showOpenFilePicker } from '../show-open-file-picker'; // TODO: remove when no longer need to ponyfill 'globalThis.showOpenFilePicker'
+import '../show-open-file-picker'; // TODO: remove when no longer need to ponyfill 'globalThis.showOpenFilePicker'
 import type { OpenFilePickerOptions } from '../types'; // TODO: remove when no longer need to ponyfill 'globalThis.showOpenFilePicker'
 
 @Directive({
@@ -18,6 +18,7 @@ export class OpenFilePicker {
     event.preventDefault();
 
     try {
+      // @ts-expect-error remove when no longer need to ponyfill 'globalThis.showOpenFilePicker'
       const fileHandles = await showOpenFilePicker(this.options());
 
       if (fileHandles) {
